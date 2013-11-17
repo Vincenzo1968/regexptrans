@@ -1,0 +1,25 @@
+CFLAGS=-Wall -W -pedantic -O3
+
+all:	ittore
+
+ittore:	symtab.o ast.o lexer.o parser.o main.o
+	gcc $(CFLAGS) -o $@ symtab.o ast.o parser.o lexer.o main.o
+
+symtab.o: symtab.c symtab.h
+
+ast.o: ast.c ast.h symtab.h
+
+lexer.o: lexer.c parser.h
+
+parser.o: parser.c lexer.h 
+
+lexer.c lexer.h: lexer.l
+	flex -f -L -Ca lexer.l
+
+parser.c parser.h: parser.y
+	bison -vd -o parser.c parser.y
+
+clean:
+	rm -f ittore \
+	lexer.c lexer.h parser.c parser.h \
+	symtab.o ast.o lexer.o parser.o main.o parser.output

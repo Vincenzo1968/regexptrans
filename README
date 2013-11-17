@@ -1,0 +1,53 @@
+RegExpTranslator README
+==================
+
+1 - Introduction
+2 - Building RegExpTranslator 
+3 - Installing RegExpTranslator 
+4 - Run the programs
+
+1 - Introduction
+----------------
+RegExpTranslator is a program to translate regexp to italian and viceversa.
+
+2 - Building RegExpTranslator
+------------------------
+To build RegExpTranslator use the following steps:
+
+   1) Unzip and untar the distribution regexptrans-1.0.tar.gz source tarball:
+   
+      $ tar -xvf regexptrans-1.0.tar.gz
+      $ cd regexptrans-x.y
+          
+   2) Run the configure script to create myoptParser Makefiles. If the configure
+      script fails... now you have a problem.
+     
+      $ ./configure --help          # (for available configuration options)
+      $ ./configure [--with-option1][--with-the-other-option]
+
+      NOTE: You may also run configure from a different directory in order to
+      keep your distribution clean, e.g.:
+
+      $ mkdir build
+      $ chdir build
+      $ ../configure [--with-option1][--with-the-other-option]
+          
+   3) Run the top level Makefile:
+    
+      $ make
+          
+3 - Installing RegExpTranslator
+--------------------------
+To install RegExpTranslator build the install target in the top level Makefile
+    
+      $ sudo make install
+
+4 - Run the programs
+--------------------
+To translate from regexp to italian:
+    $ retoit 'regexp'
+where regexp is a valid regular expression
+
+To translate from italian to regexp:
+    $ ittore filename
+where filename is a valid text file containing a descriptive(in italian, of course) regexp.

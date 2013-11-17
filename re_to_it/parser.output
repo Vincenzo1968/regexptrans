@@ -1,0 +1,2933 @@
+Grammatica
+
+    0 $accept: goal $end
+
+    1 goal: re
+
+    2 re: union
+    3   | simple_re
+    4   | simple_re T_KAPPA simple_re
+
+    5 union: re T_OR simple_re
+
+    6 simple_re: concatenation
+    7          | basic_re
+    8          | simple_re lookaround
+
+    9 concatenation: simple_re basic_re
+
+   10 basic_re: star
+   11         | plus
+   12         | question
+   13         | reprange
+   14         | elementary_re
+
+   15 lookaround: T_OPEN_POSITIVE_LOOKAHEAD re T_RPAREN
+   16           | T_OPEN_NEGATIVE_LOOKAHEAD re T_RPAREN
+   17           | T_OPEN_POSITIVE_LOOKBEHIND re T_RPAREN
+   18           | T_OPEN_NEGATIVE_LOOKBEHIND re T_RPAREN
+
+   19 star: elementary_re T_STAR
+   20     | elementary_re T_STAR T_QUESTION basic_re
+   21     | elementary_re T_STAR T_PLUS basic_re
+
+   22 plus: elementary_re T_PLUS
+   23     | elementary_re T_PLUS T_QUESTION basic_re
+   24     | elementary_re T_PLUS T_PLUS basic_re
+
+   25 question: elementary_re T_QUESTION
+   26         | elementary_re T_QUESTION T_QUESTION basic_re
+   27         | elementary_re T_QUESTION T_PLUS basic_re
+
+   28 reprange: elementary_re T_LBRACE T_INTEGER T_COMMA T_INTEGER T_RBRACE
+   29         | elementary_re T_LBRACE T_INTEGER T_COMMA T_INTEGER T_RBRACE T_QUESTION basic_re
+   30         | elementary_re T_LBRACE T_INTEGER T_COMMA T_INTEGER T_RBRACE T_PLUS basic_re
+   31         | elementary_re T_LBRACE T_INTEGER T_RBRACE
+   32         | elementary_re T_LBRACE T_INTEGER T_RBRACE T_QUESTION basic_re
+   33         | elementary_re T_LBRACE T_INTEGER T_RBRACE T_PLUS basic_re
+   34         | elementary_re T_LBRACE T_COMMA T_INTEGER T_RBRACE
+   35         | elementary_re T_LBRACE T_COMMA T_INTEGER T_RBRACE T_QUESTION basic_re
+   36         | elementary_re T_LBRACE T_COMMA T_INTEGER T_RBRACE T_PLUS basic_re
+   37         | elementary_re T_LBRACE T_INTEGER T_COMMA T_RBRACE
+   38         | elementary_re T_LBRACE T_INTEGER T_COMMA T_RBRACE T_QUESTION basic_re
+   39         | elementary_re T_LBRACE T_INTEGER T_COMMA T_RBRACE T_PLUS basic_re
+
+   40 elementary_re: group
+   41              | any
+   42              | unicode_any
+   43              | unicode_prop
+   44              | unicode_prop_neg
+   45              | backref
+   46              | char
+   47              | nul
+   48              | octal
+   49              | hex
+   50              | unicode
+   51              | set
+
+   52 group: T_LPAREN re T_RPAREN
+
+   53 any: T_ANY
+
+   54 unicode_any: T_UNICODE_ANY
+
+   55 unicode_prop: T_UNICODE_START T_UNICODE_PROP_ID
+   56             | T_UNICODE_START T_UNICODE_SCRIPT
+   57             | T_UNICODE_START T_UNICODE_BLOCK
+   58             | T_UNICODE_START T_UNICODE_INVALID
+
+   59 unicode_prop_neg: T_UNICODE_START_NEG T_UNICODE_PROP_ID
+   60                 | T_UNICODE_START_NEG T_UNICODE_SCRIPT_NEG
+   61                 | T_UNICODE_START_NEG T_UNICODE_BLOCK_NEG
+   62                 | T_UNICODE_START_NEG T_UNICODE_INVALID
+
+   63 backref: T_BACKREF
+
+   64 char: T_CHAR
+   65     | T_SPECIAL
+   66     | T_POSIX_ALNUM
+   67     | T_POSIX_ALPHA
+   68     | T_POSIX_ASCII
+   69     | T_POSIX_BLANK
+   70     | T_POSIX_CNTRL
+   71     | T_POSIX_DIGIT
+   72     | T_POSIX_GRAPH
+   73     | T_POSIX_LOWER
+   74     | T_POSIX_PRINT
+   75     | T_POSIX_PUNCT
+   76     | T_POSIX_SPACE
+   77     | T_POSIX_UPPER
+   78     | T_POSIX_WORD
+   79     | T_POSIX_XDIGIT
+   80     | T_POSIX_UNKNOWN
+   81     | T_POSIX_OUT
+
+   82 nul: T_NUL
+
+   83 octal: T_OCTAL
+
+   84 hex: T_HEX
+
+   85 unicode: T_UNICODE
+
+   86 set: positive_set
+   87    | negative_set
+
+   88 positive_set: T_BEGIN_POS_SET set_items T_END_SET
+
+   89 negative_set: T_BEGIN_NEG_SET set_items T_END_SET
+
+   90 set_items: set_item
+   91          | set_items set_item
+
+   92 set_item: range
+   93         | char
+   94         | any
+   95         | unicode_any
+   96         | unicode_prop
+   97         | unicode_prop_neg
+
+   98 range: char T_RANGE char
+   99      | unicode_prop T_RANGE unicode_prop
+  100      | unicode_prop T_RANGE char
+  101      | char T_RANGE unicode_prop
+  102      | unicode_prop_neg T_RANGE unicode_prop_neg
+  103      | unicode_prop_neg T_RANGE char
+  104      | char T_RANGE unicode_prop_neg
+
+
+Simboli terminali e regole in cui appaiono
+
+$end (0) 0
+error (256)
+T_OR (258) 5
+T_PLUS (259) 21 22 23 24 27 30 33 36 39
+T_STAR (260) 19 20 21
+T_QUESTION (261) 20 23 25 26 27 29 32 35 38
+T_RANGE (262) 98 99 100 101 102 103 104
+T_LPAREN (263) 52
+T_RPAREN (264) 15 16 17 18 52
+T_BEGIN_NEG_SET (265) 89
+T_BEGIN_POS_SET (266) 88
+T_END_SET (267) 88 89
+T_ANY (268) 53
+T_UNICODE_ANY (269) 54
+T_LBRACE (270) 28 29 30 31 32 33 34 35 36 37 38 39
+T_RBRACE (271) 28 29 30 31 32 33 34 35 36 37 38 39
+T_COMMA (272) 28 29 30 34 35 36 37 38 39
+T_OPEN_POSITIVE_LOOKAHEAD (273) 15
+T_OPEN_NEGATIVE_LOOKAHEAD (274) 16
+T_OPEN_POSITIVE_LOOKBEHIND (275) 17
+T_OPEN_NEGATIVE_LOOKBEHIND (276) 18
+T_KAPPA (277) 4
+T_UNICODE_START (278) 55 56 57 58
+T_UNICODE_START_NEG (279) 59 60 61 62
+T_POSIX_ALNUM (280) 66
+T_POSIX_ALPHA (281) 67
+T_POSIX_ASCII (282) 68
+T_POSIX_BLANK (283) 69
+T_POSIX_CNTRL (284) 70
+T_POSIX_DIGIT (285) 71
+T_POSIX_GRAPH (286) 72
+T_POSIX_LOWER (287) 73
+T_POSIX_PRINT (288) 74
+T_POSIX_PUNCT (289) 75
+T_POSIX_SPACE (290) 76
+T_POSIX_UPPER (291) 77
+T_POSIX_WORD (292) 78
+T_POSIX_XDIGIT (293) 79
+T_CHAR (294) 64
+T_SPECIAL (295) 65
+T_NUL (296) 82
+T_INTEGER (297) 28 29 30 31 32 33 34 35 36 37 38 39
+T_BACKREF (298) 63
+T_UNICODE_PROP_ID (299) 55 59
+T_UNICODE_SCRIPT (300) 56
+T_UNICODE_SCRIPT_NEG (301) 60
+T_UNICODE_BLOCK (302) 57
+T_UNICODE_BLOCK_NEG (303) 61
+T_OCTAL (304) 83
+T_HEX (305) 84
+T_UNICODE (306) 85
+T_UNICODE_INVALID (307) 58 62
+T_POSIX_UNKNOWN (308) 80
+T_POSIX_OUT (309) 81
+
+
+Simboli nonterminali e regole in cui appaiono
+
+$accept (55)
+    nel primo membro: 0
+goal (56)
+    nel primo membro: 1, nel secondo membro: 0
+re (57)
+    nel primo membro: 2 3 4, nel secondo membro: 1 5 15 16 17 18 52
+union (58)
+    nel primo membro: 5, nel secondo membro: 2
+simple_re (59)
+    nel primo membro: 6 7 8, nel secondo membro: 3 4 5 8 9
+concatenation (60)
+    nel primo membro: 9, nel secondo membro: 6
+basic_re (61)
+    nel primo membro: 10 11 12 13 14, nel secondo membro: 7 9 20 21
+    23 24 26 27 29 30 32 33 35 36 38 39
+lookaround (62)
+    nel primo membro: 15 16 17 18, nel secondo membro: 8
+star (63)
+    nel primo membro: 19 20 21, nel secondo membro: 10
+plus (64)
+    nel primo membro: 22 23 24, nel secondo membro: 11
+question (65)
+    nel primo membro: 25 26 27, nel secondo membro: 12
+reprange (66)
+    nel primo membro: 28 29 30 31 32 33 34 35 36 37 38 39, nel secondo membro:
+    13
+elementary_re (67)
+    nel primo membro: 40 41 42 43 44 45 46 47 48 49 50 51, nel secondo membro:
+    14 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38
+    39
+group (68)
+    nel primo membro: 52, nel secondo membro: 40
+any (69)
+    nel primo membro: 53, nel secondo membro: 41 94
+unicode_any (70)
+    nel primo membro: 54, nel secondo membro: 42 95
+unicode_prop (71)
+    nel primo membro: 55 56 57 58, nel secondo membro: 43 96 99 100
+    101
+unicode_prop_neg (72)
+    nel primo membro: 59 60 61 62, nel secondo membro: 44 97 102 103
+    104
+backref (73)
+    nel primo membro: 63, nel secondo membro: 45
+char (74)
+    nel primo membro: 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78
+    79 80 81, nel secondo membro: 46 93 98 100 101 103 104
+nul (75)
+    nel primo membro: 82, nel secondo membro: 47
+octal (76)
+    nel primo membro: 83, nel secondo membro: 48
+hex (77)
+    nel primo membro: 84, nel secondo membro: 49
+unicode (78)
+    nel primo membro: 85, nel secondo membro: 50
+set (79)
+    nel primo membro: 86 87, nel secondo membro: 51
+positive_set (80)
+    nel primo membro: 88, nel secondo membro: 86
+negative_set (81)
+    nel primo membro: 89, nel secondo membro: 87
+set_items (82)
+    nel primo membro: 90 91, nel secondo membro: 88 89 91
+set_item (83)
+    nel primo membro: 92 93 94 95 96 97, nel secondo membro: 90 91
+range (84)
+    nel primo membro: 98 99 100 101 102 103 104, nel secondo membro:
+    92
+
+
+State 0
+
+    0 $accept: . goal $end
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    goal              prosecuzione allo stato 31
+    re                prosecuzione allo stato 32
+    union             prosecuzione allo stato 33
+    simple_re         prosecuzione allo stato 34
+    concatenation     prosecuzione allo stato 35
+    basic_re          prosecuzione allo stato 36
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 1
+
+   52 group: T_LPAREN . re T_RPAREN
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    re                prosecuzione allo stato 56
+    union             prosecuzione allo stato 33
+    simple_re         prosecuzione allo stato 34
+    concatenation     prosecuzione allo stato 35
+    basic_re          prosecuzione allo stato 36
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 2
+
+   89 negative_set: T_BEGIN_NEG_SET . set_items T_END_SET
+
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    any               prosecuzione allo stato 57
+    unicode_any       prosecuzione allo stato 58
+    unicode_prop      prosecuzione allo stato 59
+    unicode_prop_neg  prosecuzione allo stato 60
+    char              prosecuzione allo stato 61
+    set_items         prosecuzione allo stato 62
+    set_item          prosecuzione allo stato 63
+    range             prosecuzione allo stato 64
+
+
+State 3
+
+   88 positive_set: T_BEGIN_POS_SET . set_items T_END_SET
+
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    any               prosecuzione allo stato 57
+    unicode_any       prosecuzione allo stato 58
+    unicode_prop      prosecuzione allo stato 59
+    unicode_prop_neg  prosecuzione allo stato 60
+    char              prosecuzione allo stato 61
+    set_items         prosecuzione allo stato 65
+    set_item          prosecuzione allo stato 63
+    range             prosecuzione allo stato 64
+
+
+State 4
+
+   53 any: T_ANY .
+
+    $default  riduzione con la regola 53 (any)
+
+
+State 5
+
+   54 unicode_any: T_UNICODE_ANY .
+
+    $default  riduzione con la regola 54 (unicode_any)
+
+
+State 6
+
+   55 unicode_prop: T_UNICODE_START . T_UNICODE_PROP_ID
+   56             | T_UNICODE_START . T_UNICODE_SCRIPT
+   57             | T_UNICODE_START . T_UNICODE_BLOCK
+   58             | T_UNICODE_START . T_UNICODE_INVALID
+
+    T_UNICODE_PROP_ID  shift e prosecuzione allo stato 66
+    T_UNICODE_SCRIPT   shift e prosecuzione allo stato 67
+    T_UNICODE_BLOCK    shift e prosecuzione allo stato 68
+    T_UNICODE_INVALID  shift e prosecuzione allo stato 69
+
+
+State 7
+
+   59 unicode_prop_neg: T_UNICODE_START_NEG . T_UNICODE_PROP_ID
+   60                 | T_UNICODE_START_NEG . T_UNICODE_SCRIPT_NEG
+   61                 | T_UNICODE_START_NEG . T_UNICODE_BLOCK_NEG
+   62                 | T_UNICODE_START_NEG . T_UNICODE_INVALID
+
+    T_UNICODE_PROP_ID     shift e prosecuzione allo stato 70
+    T_UNICODE_SCRIPT_NEG  shift e prosecuzione allo stato 71
+    T_UNICODE_BLOCK_NEG   shift e prosecuzione allo stato 72
+    T_UNICODE_INVALID     shift e prosecuzione allo stato 73
+
+
+State 8
+
+   66 char: T_POSIX_ALNUM .
+
+    $default  riduzione con la regola 66 (char)
+
+
+State 9
+
+   67 char: T_POSIX_ALPHA .
+
+    $default  riduzione con la regola 67 (char)
+
+
+State 10
+
+   68 char: T_POSIX_ASCII .
+
+    $default  riduzione con la regola 68 (char)
+
+
+State 11
+
+   69 char: T_POSIX_BLANK .
+
+    $default  riduzione con la regola 69 (char)
+
+
+State 12
+
+   70 char: T_POSIX_CNTRL .
+
+    $default  riduzione con la regola 70 (char)
+
+
+State 13
+
+   71 char: T_POSIX_DIGIT .
+
+    $default  riduzione con la regola 71 (char)
+
+
+State 14
+
+   72 char: T_POSIX_GRAPH .
+
+    $default  riduzione con la regola 72 (char)
+
+
+State 15
+
+   73 char: T_POSIX_LOWER .
+
+    $default  riduzione con la regola 73 (char)
+
+
+State 16
+
+   74 char: T_POSIX_PRINT .
+
+    $default  riduzione con la regola 74 (char)
+
+
+State 17
+
+   75 char: T_POSIX_PUNCT .
+
+    $default  riduzione con la regola 75 (char)
+
+
+State 18
+
+   76 char: T_POSIX_SPACE .
+
+    $default  riduzione con la regola 76 (char)
+
+
+State 19
+
+   77 char: T_POSIX_UPPER .
+
+    $default  riduzione con la regola 77 (char)
+
+
+State 20
+
+   78 char: T_POSIX_WORD .
+
+    $default  riduzione con la regola 78 (char)
+
+
+State 21
+
+   79 char: T_POSIX_XDIGIT .
+
+    $default  riduzione con la regola 79 (char)
+
+
+State 22
+
+   64 char: T_CHAR .
+
+    $default  riduzione con la regola 64 (char)
+
+
+State 23
+
+   65 char: T_SPECIAL .
+
+    $default  riduzione con la regola 65 (char)
+
+
+State 24
+
+   82 nul: T_NUL .
+
+    $default  riduzione con la regola 82 (nul)
+
+
+State 25
+
+   63 backref: T_BACKREF .
+
+    $default  riduzione con la regola 63 (backref)
+
+
+State 26
+
+   83 octal: T_OCTAL .
+
+    $default  riduzione con la regola 83 (octal)
+
+
+State 27
+
+   84 hex: T_HEX .
+
+    $default  riduzione con la regola 84 (hex)
+
+
+State 28
+
+   85 unicode: T_UNICODE .
+
+    $default  riduzione con la regola 85 (unicode)
+
+
+State 29
+
+   80 char: T_POSIX_UNKNOWN .
+
+    $default  riduzione con la regola 80 (char)
+
+
+State 30
+
+   81 char: T_POSIX_OUT .
+
+    $default  riduzione con la regola 81 (char)
+
+
+State 31
+
+    0 $accept: goal . $end
+
+    $end  shift e prosecuzione allo stato 74
+
+
+State 32
+
+    1 goal: re .
+    5 union: re . T_OR simple_re
+
+    T_OR  shift e prosecuzione allo stato 75
+
+    $default  riduzione con la regola 1 (goal)
+
+
+State 33
+
+    2 re: union .
+
+    $default  riduzione con la regola 2 (re)
+
+
+State 34
+
+    3 re: simple_re .
+    4   | simple_re . T_KAPPA simple_re
+    8 simple_re: simple_re . lookaround
+    9 concatenation: simple_re . basic_re
+
+    T_LPAREN                    shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET             shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET             shift e prosecuzione allo stato 3
+    T_ANY                       shift e prosecuzione allo stato 4
+    T_UNICODE_ANY               shift e prosecuzione allo stato 5
+    T_OPEN_POSITIVE_LOOKAHEAD   shift e prosecuzione allo stato 76
+    T_OPEN_NEGATIVE_LOOKAHEAD   shift e prosecuzione allo stato 77
+    T_OPEN_POSITIVE_LOOKBEHIND  shift e prosecuzione allo stato 78
+    T_OPEN_NEGATIVE_LOOKBEHIND  shift e prosecuzione allo stato 79
+    T_KAPPA                     shift e prosecuzione allo stato 80
+    T_UNICODE_START             shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG         shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM               shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA               shift e prosecuzione allo stato 9
+    T_POSIX_ASCII               shift e prosecuzione allo stato 10
+    T_POSIX_BLANK               shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL               shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT               shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH               shift e prosecuzione allo stato 14
+    T_POSIX_LOWER               shift e prosecuzione allo stato 15
+    T_POSIX_PRINT               shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT               shift e prosecuzione allo stato 17
+    T_POSIX_SPACE               shift e prosecuzione allo stato 18
+    T_POSIX_UPPER               shift e prosecuzione allo stato 19
+    T_POSIX_WORD                shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT              shift e prosecuzione allo stato 21
+    T_CHAR                      shift e prosecuzione allo stato 22
+    T_SPECIAL                   shift e prosecuzione allo stato 23
+    T_NUL                       shift e prosecuzione allo stato 24
+    T_BACKREF                   shift e prosecuzione allo stato 25
+    T_OCTAL                     shift e prosecuzione allo stato 26
+    T_HEX                       shift e prosecuzione allo stato 27
+    T_UNICODE                   shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN             shift e prosecuzione allo stato 29
+    T_POSIX_OUT                 shift e prosecuzione allo stato 30
+
+    $default  riduzione con la regola 3 (re)
+
+    basic_re          prosecuzione allo stato 81
+    lookaround        prosecuzione allo stato 82
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 35
+
+    6 simple_re: concatenation .
+
+    $default  riduzione con la regola 6 (simple_re)
+
+
+State 36
+
+    7 simple_re: basic_re .
+
+    $default  riduzione con la regola 7 (simple_re)
+
+
+State 37
+
+   10 basic_re: star .
+
+    $default  riduzione con la regola 10 (basic_re)
+
+
+State 38
+
+   11 basic_re: plus .
+
+    $default  riduzione con la regola 11 (basic_re)
+
+
+State 39
+
+   12 basic_re: question .
+
+    $default  riduzione con la regola 12 (basic_re)
+
+
+State 40
+
+   13 basic_re: reprange .
+
+    $default  riduzione con la regola 13 (basic_re)
+
+
+State 41
+
+   14 basic_re: elementary_re .
+   19 star: elementary_re . T_STAR
+   20     | elementary_re . T_STAR T_QUESTION basic_re
+   21     | elementary_re . T_STAR T_PLUS basic_re
+   22 plus: elementary_re . T_PLUS
+   23     | elementary_re . T_PLUS T_QUESTION basic_re
+   24     | elementary_re . T_PLUS T_PLUS basic_re
+   25 question: elementary_re . T_QUESTION
+   26         | elementary_re . T_QUESTION T_QUESTION basic_re
+   27         | elementary_re . T_QUESTION T_PLUS basic_re
+   28 reprange: elementary_re . T_LBRACE T_INTEGER T_COMMA T_INTEGER T_RBRACE
+   29         | elementary_re . T_LBRACE T_INTEGER T_COMMA T_INTEGER T_RBRACE T_QUESTION basic_re
+   30         | elementary_re . T_LBRACE T_INTEGER T_COMMA T_INTEGER T_RBRACE T_PLUS basic_re
+   31         | elementary_re . T_LBRACE T_INTEGER T_RBRACE
+   32         | elementary_re . T_LBRACE T_INTEGER T_RBRACE T_QUESTION basic_re
+   33         | elementary_re . T_LBRACE T_INTEGER T_RBRACE T_PLUS basic_re
+   34         | elementary_re . T_LBRACE T_COMMA T_INTEGER T_RBRACE
+   35         | elementary_re . T_LBRACE T_COMMA T_INTEGER T_RBRACE T_QUESTION basic_re
+   36         | elementary_re . T_LBRACE T_COMMA T_INTEGER T_RBRACE T_PLUS basic_re
+   37         | elementary_re . T_LBRACE T_INTEGER T_COMMA T_RBRACE
+   38         | elementary_re . T_LBRACE T_INTEGER T_COMMA T_RBRACE T_QUESTION basic_re
+   39         | elementary_re . T_LBRACE T_INTEGER T_COMMA T_RBRACE T_PLUS basic_re
+
+    T_PLUS      shift e prosecuzione allo stato 83
+    T_STAR      shift e prosecuzione allo stato 84
+    T_QUESTION  shift e prosecuzione allo stato 85
+    T_LBRACE    shift e prosecuzione allo stato 86
+
+    $default  riduzione con la regola 14 (basic_re)
+
+
+State 42
+
+   40 elementary_re: group .
+
+    $default  riduzione con la regola 40 (elementary_re)
+
+
+State 43
+
+   41 elementary_re: any .
+
+    $default  riduzione con la regola 41 (elementary_re)
+
+
+State 44
+
+   42 elementary_re: unicode_any .
+
+    $default  riduzione con la regola 42 (elementary_re)
+
+
+State 45
+
+   43 elementary_re: unicode_prop .
+
+    $default  riduzione con la regola 43 (elementary_re)
+
+
+State 46
+
+   44 elementary_re: unicode_prop_neg .
+
+    $default  riduzione con la regola 44 (elementary_re)
+
+
+State 47
+
+   45 elementary_re: backref .
+
+    $default  riduzione con la regola 45 (elementary_re)
+
+
+State 48
+
+   46 elementary_re: char .
+
+    $default  riduzione con la regola 46 (elementary_re)
+
+
+State 49
+
+   47 elementary_re: nul .
+
+    $default  riduzione con la regola 47 (elementary_re)
+
+
+State 50
+
+   48 elementary_re: octal .
+
+    $default  riduzione con la regola 48 (elementary_re)
+
+
+State 51
+
+   49 elementary_re: hex .
+
+    $default  riduzione con la regola 49 (elementary_re)
+
+
+State 52
+
+   50 elementary_re: unicode .
+
+    $default  riduzione con la regola 50 (elementary_re)
+
+
+State 53
+
+   51 elementary_re: set .
+
+    $default  riduzione con la regola 51 (elementary_re)
+
+
+State 54
+
+   86 set: positive_set .
+
+    $default  riduzione con la regola 86 (set)
+
+
+State 55
+
+   87 set: negative_set .
+
+    $default  riduzione con la regola 87 (set)
+
+
+State 56
+
+    5 union: re . T_OR simple_re
+   52 group: T_LPAREN re . T_RPAREN
+
+    T_OR      shift e prosecuzione allo stato 75
+    T_RPAREN  shift e prosecuzione allo stato 87
+
+
+State 57
+
+   94 set_item: any .
+
+    $default  riduzione con la regola 94 (set_item)
+
+
+State 58
+
+   95 set_item: unicode_any .
+
+    $default  riduzione con la regola 95 (set_item)
+
+
+State 59
+
+   96 set_item: unicode_prop .
+   99 range: unicode_prop . T_RANGE unicode_prop
+  100      | unicode_prop . T_RANGE char
+
+    T_RANGE  shift e prosecuzione allo stato 88
+
+    $default  riduzione con la regola 96 (set_item)
+
+
+State 60
+
+   97 set_item: unicode_prop_neg .
+  102 range: unicode_prop_neg . T_RANGE unicode_prop_neg
+  103      | unicode_prop_neg . T_RANGE char
+
+    T_RANGE  shift e prosecuzione allo stato 89
+
+    $default  riduzione con la regola 97 (set_item)
+
+
+State 61
+
+   93 set_item: char .
+   98 range: char . T_RANGE char
+  101      | char . T_RANGE unicode_prop
+  104      | char . T_RANGE unicode_prop_neg
+
+    T_RANGE  shift e prosecuzione allo stato 90
+
+    $default  riduzione con la regola 93 (set_item)
+
+
+State 62
+
+   89 negative_set: T_BEGIN_NEG_SET set_items . T_END_SET
+   91 set_items: set_items . set_item
+
+    T_END_SET            shift e prosecuzione allo stato 91
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    any               prosecuzione allo stato 57
+    unicode_any       prosecuzione allo stato 58
+    unicode_prop      prosecuzione allo stato 59
+    unicode_prop_neg  prosecuzione allo stato 60
+    char              prosecuzione allo stato 61
+    set_item          prosecuzione allo stato 92
+    range             prosecuzione allo stato 64
+
+
+State 63
+
+   90 set_items: set_item .
+
+    $default  riduzione con la regola 90 (set_items)
+
+
+State 64
+
+   92 set_item: range .
+
+    $default  riduzione con la regola 92 (set_item)
+
+
+State 65
+
+   88 positive_set: T_BEGIN_POS_SET set_items . T_END_SET
+   91 set_items: set_items . set_item
+
+    T_END_SET            shift e prosecuzione allo stato 93
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    any               prosecuzione allo stato 57
+    unicode_any       prosecuzione allo stato 58
+    unicode_prop      prosecuzione allo stato 59
+    unicode_prop_neg  prosecuzione allo stato 60
+    char              prosecuzione allo stato 61
+    set_item          prosecuzione allo stato 92
+    range             prosecuzione allo stato 64
+
+
+State 66
+
+   55 unicode_prop: T_UNICODE_START T_UNICODE_PROP_ID .
+
+    $default  riduzione con la regola 55 (unicode_prop)
+
+
+State 67
+
+   56 unicode_prop: T_UNICODE_START T_UNICODE_SCRIPT .
+
+    $default  riduzione con la regola 56 (unicode_prop)
+
+
+State 68
+
+   57 unicode_prop: T_UNICODE_START T_UNICODE_BLOCK .
+
+    $default  riduzione con la regola 57 (unicode_prop)
+
+
+State 69
+
+   58 unicode_prop: T_UNICODE_START T_UNICODE_INVALID .
+
+    $default  riduzione con la regola 58 (unicode_prop)
+
+
+State 70
+
+   59 unicode_prop_neg: T_UNICODE_START_NEG T_UNICODE_PROP_ID .
+
+    $default  riduzione con la regola 59 (unicode_prop_neg)
+
+
+State 71
+
+   60 unicode_prop_neg: T_UNICODE_START_NEG T_UNICODE_SCRIPT_NEG .
+
+    $default  riduzione con la regola 60 (unicode_prop_neg)
+
+
+State 72
+
+   61 unicode_prop_neg: T_UNICODE_START_NEG T_UNICODE_BLOCK_NEG .
+
+    $default  riduzione con la regola 61 (unicode_prop_neg)
+
+
+State 73
+
+   62 unicode_prop_neg: T_UNICODE_START_NEG T_UNICODE_INVALID .
+
+    $default  riduzione con la regola 62 (unicode_prop_neg)
+
+
+State 74
+
+    0 $accept: goal $end .
+
+    $default  accetta
+
+
+State 75
+
+    5 union: re T_OR . simple_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    simple_re         prosecuzione allo stato 94
+    concatenation     prosecuzione allo stato 35
+    basic_re          prosecuzione allo stato 36
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 76
+
+   15 lookaround: T_OPEN_POSITIVE_LOOKAHEAD . re T_RPAREN
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    re                prosecuzione allo stato 95
+    union             prosecuzione allo stato 33
+    simple_re         prosecuzione allo stato 34
+    concatenation     prosecuzione allo stato 35
+    basic_re          prosecuzione allo stato 36
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 77
+
+   16 lookaround: T_OPEN_NEGATIVE_LOOKAHEAD . re T_RPAREN
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    re                prosecuzione allo stato 96
+    union             prosecuzione allo stato 33
+    simple_re         prosecuzione allo stato 34
+    concatenation     prosecuzione allo stato 35
+    basic_re          prosecuzione allo stato 36
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 78
+
+   17 lookaround: T_OPEN_POSITIVE_LOOKBEHIND . re T_RPAREN
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    re                prosecuzione allo stato 97
+    union             prosecuzione allo stato 33
+    simple_re         prosecuzione allo stato 34
+    concatenation     prosecuzione allo stato 35
+    basic_re          prosecuzione allo stato 36
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 79
+
+   18 lookaround: T_OPEN_NEGATIVE_LOOKBEHIND . re T_RPAREN
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    re                prosecuzione allo stato 98
+    union             prosecuzione allo stato 33
+    simple_re         prosecuzione allo stato 34
+    concatenation     prosecuzione allo stato 35
+    basic_re          prosecuzione allo stato 36
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 80
+
+    4 re: simple_re T_KAPPA . simple_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    simple_re         prosecuzione allo stato 99
+    concatenation     prosecuzione allo stato 35
+    basic_re          prosecuzione allo stato 36
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 81
+
+    9 concatenation: simple_re basic_re .
+
+    $default  riduzione con la regola 9 (concatenation)
+
+
+State 82
+
+    8 simple_re: simple_re lookaround .
+
+    $default  riduzione con la regola 8 (simple_re)
+
+
+State 83
+
+   22 plus: elementary_re T_PLUS .
+   23     | elementary_re T_PLUS . T_QUESTION basic_re
+   24     | elementary_re T_PLUS . T_PLUS basic_re
+
+    T_PLUS      shift e prosecuzione allo stato 100
+    T_QUESTION  shift e prosecuzione allo stato 101
+
+    $default  riduzione con la regola 22 (plus)
+
+
+State 84
+
+   19 star: elementary_re T_STAR .
+   20     | elementary_re T_STAR . T_QUESTION basic_re
+   21     | elementary_re T_STAR . T_PLUS basic_re
+
+    T_PLUS      shift e prosecuzione allo stato 102
+    T_QUESTION  shift e prosecuzione allo stato 103
+
+    $default  riduzione con la regola 19 (star)
+
+
+State 85
+
+   25 question: elementary_re T_QUESTION .
+   26         | elementary_re T_QUESTION . T_QUESTION basic_re
+   27         | elementary_re T_QUESTION . T_PLUS basic_re
+
+    T_PLUS      shift e prosecuzione allo stato 104
+    T_QUESTION  shift e prosecuzione allo stato 105
+
+    $default  riduzione con la regola 25 (question)
+
+
+State 86
+
+   28 reprange: elementary_re T_LBRACE . T_INTEGER T_COMMA T_INTEGER T_RBRACE
+   29         | elementary_re T_LBRACE . T_INTEGER T_COMMA T_INTEGER T_RBRACE T_QUESTION basic_re
+   30         | elementary_re T_LBRACE . T_INTEGER T_COMMA T_INTEGER T_RBRACE T_PLUS basic_re
+   31         | elementary_re T_LBRACE . T_INTEGER T_RBRACE
+   32         | elementary_re T_LBRACE . T_INTEGER T_RBRACE T_QUESTION basic_re
+   33         | elementary_re T_LBRACE . T_INTEGER T_RBRACE T_PLUS basic_re
+   34         | elementary_re T_LBRACE . T_COMMA T_INTEGER T_RBRACE
+   35         | elementary_re T_LBRACE . T_COMMA T_INTEGER T_RBRACE T_QUESTION basic_re
+   36         | elementary_re T_LBRACE . T_COMMA T_INTEGER T_RBRACE T_PLUS basic_re
+   37         | elementary_re T_LBRACE . T_INTEGER T_COMMA T_RBRACE
+   38         | elementary_re T_LBRACE . T_INTEGER T_COMMA T_RBRACE T_QUESTION basic_re
+   39         | elementary_re T_LBRACE . T_INTEGER T_COMMA T_RBRACE T_PLUS basic_re
+
+    T_COMMA    shift e prosecuzione allo stato 106
+    T_INTEGER  shift e prosecuzione allo stato 107
+
+
+State 87
+
+   52 group: T_LPAREN re T_RPAREN .
+
+    $default  riduzione con la regola 52 (group)
+
+
+State 88
+
+   99 range: unicode_prop T_RANGE . unicode_prop
+  100      | unicode_prop T_RANGE . char
+
+    T_UNICODE_START  shift e prosecuzione allo stato 6
+    T_POSIX_ALNUM    shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA    shift e prosecuzione allo stato 9
+    T_POSIX_ASCII    shift e prosecuzione allo stato 10
+    T_POSIX_BLANK    shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL    shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT    shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH    shift e prosecuzione allo stato 14
+    T_POSIX_LOWER    shift e prosecuzione allo stato 15
+    T_POSIX_PRINT    shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT    shift e prosecuzione allo stato 17
+    T_POSIX_SPACE    shift e prosecuzione allo stato 18
+    T_POSIX_UPPER    shift e prosecuzione allo stato 19
+    T_POSIX_WORD     shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT   shift e prosecuzione allo stato 21
+    T_CHAR           shift e prosecuzione allo stato 22
+    T_SPECIAL        shift e prosecuzione allo stato 23
+    T_POSIX_UNKNOWN  shift e prosecuzione allo stato 29
+    T_POSIX_OUT      shift e prosecuzione allo stato 30
+
+    unicode_prop  prosecuzione allo stato 108
+    char          prosecuzione allo stato 109
+
+
+State 89
+
+  102 range: unicode_prop_neg T_RANGE . unicode_prop_neg
+  103      | unicode_prop_neg T_RANGE . char
+
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    unicode_prop_neg  prosecuzione allo stato 110
+    char              prosecuzione allo stato 111
+
+
+State 90
+
+   98 range: char T_RANGE . char
+  101      | char T_RANGE . unicode_prop
+  104      | char T_RANGE . unicode_prop_neg
+
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    unicode_prop      prosecuzione allo stato 112
+    unicode_prop_neg  prosecuzione allo stato 113
+    char              prosecuzione allo stato 114
+
+
+State 91
+
+   89 negative_set: T_BEGIN_NEG_SET set_items T_END_SET .
+
+    $default  riduzione con la regola 89 (negative_set)
+
+
+State 92
+
+   91 set_items: set_items set_item .
+
+    $default  riduzione con la regola 91 (set_items)
+
+
+State 93
+
+   88 positive_set: T_BEGIN_POS_SET set_items T_END_SET .
+
+    $default  riduzione con la regola 88 (positive_set)
+
+
+State 94
+
+    5 union: re T_OR simple_re .
+    8 simple_re: simple_re . lookaround
+    9 concatenation: simple_re . basic_re
+
+    T_LPAREN                    shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET             shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET             shift e prosecuzione allo stato 3
+    T_ANY                       shift e prosecuzione allo stato 4
+    T_UNICODE_ANY               shift e prosecuzione allo stato 5
+    T_OPEN_POSITIVE_LOOKAHEAD   shift e prosecuzione allo stato 76
+    T_OPEN_NEGATIVE_LOOKAHEAD   shift e prosecuzione allo stato 77
+    T_OPEN_POSITIVE_LOOKBEHIND  shift e prosecuzione allo stato 78
+    T_OPEN_NEGATIVE_LOOKBEHIND  shift e prosecuzione allo stato 79
+    T_UNICODE_START             shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG         shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM               shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA               shift e prosecuzione allo stato 9
+    T_POSIX_ASCII               shift e prosecuzione allo stato 10
+    T_POSIX_BLANK               shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL               shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT               shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH               shift e prosecuzione allo stato 14
+    T_POSIX_LOWER               shift e prosecuzione allo stato 15
+    T_POSIX_PRINT               shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT               shift e prosecuzione allo stato 17
+    T_POSIX_SPACE               shift e prosecuzione allo stato 18
+    T_POSIX_UPPER               shift e prosecuzione allo stato 19
+    T_POSIX_WORD                shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT              shift e prosecuzione allo stato 21
+    T_CHAR                      shift e prosecuzione allo stato 22
+    T_SPECIAL                   shift e prosecuzione allo stato 23
+    T_NUL                       shift e prosecuzione allo stato 24
+    T_BACKREF                   shift e prosecuzione allo stato 25
+    T_OCTAL                     shift e prosecuzione allo stato 26
+    T_HEX                       shift e prosecuzione allo stato 27
+    T_UNICODE                   shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN             shift e prosecuzione allo stato 29
+    T_POSIX_OUT                 shift e prosecuzione allo stato 30
+
+    $default  riduzione con la regola 5 (union)
+
+    basic_re          prosecuzione allo stato 81
+    lookaround        prosecuzione allo stato 82
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 95
+
+    5 union: re . T_OR simple_re
+   15 lookaround: T_OPEN_POSITIVE_LOOKAHEAD re . T_RPAREN
+
+    T_OR      shift e prosecuzione allo stato 75
+    T_RPAREN  shift e prosecuzione allo stato 115
+
+
+State 96
+
+    5 union: re . T_OR simple_re
+   16 lookaround: T_OPEN_NEGATIVE_LOOKAHEAD re . T_RPAREN
+
+    T_OR      shift e prosecuzione allo stato 75
+    T_RPAREN  shift e prosecuzione allo stato 116
+
+
+State 97
+
+    5 union: re . T_OR simple_re
+   17 lookaround: T_OPEN_POSITIVE_LOOKBEHIND re . T_RPAREN
+
+    T_OR      shift e prosecuzione allo stato 75
+    T_RPAREN  shift e prosecuzione allo stato 117
+
+
+State 98
+
+    5 union: re . T_OR simple_re
+   18 lookaround: T_OPEN_NEGATIVE_LOOKBEHIND re . T_RPAREN
+
+    T_OR      shift e prosecuzione allo stato 75
+    T_RPAREN  shift e prosecuzione allo stato 118
+
+
+State 99
+
+    4 re: simple_re T_KAPPA simple_re .
+    8 simple_re: simple_re . lookaround
+    9 concatenation: simple_re . basic_re
+
+    T_LPAREN                    shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET             shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET             shift e prosecuzione allo stato 3
+    T_ANY                       shift e prosecuzione allo stato 4
+    T_UNICODE_ANY               shift e prosecuzione allo stato 5
+    T_OPEN_POSITIVE_LOOKAHEAD   shift e prosecuzione allo stato 76
+    T_OPEN_NEGATIVE_LOOKAHEAD   shift e prosecuzione allo stato 77
+    T_OPEN_POSITIVE_LOOKBEHIND  shift e prosecuzione allo stato 78
+    T_OPEN_NEGATIVE_LOOKBEHIND  shift e prosecuzione allo stato 79
+    T_UNICODE_START             shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG         shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM               shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA               shift e prosecuzione allo stato 9
+    T_POSIX_ASCII               shift e prosecuzione allo stato 10
+    T_POSIX_BLANK               shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL               shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT               shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH               shift e prosecuzione allo stato 14
+    T_POSIX_LOWER               shift e prosecuzione allo stato 15
+    T_POSIX_PRINT               shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT               shift e prosecuzione allo stato 17
+    T_POSIX_SPACE               shift e prosecuzione allo stato 18
+    T_POSIX_UPPER               shift e prosecuzione allo stato 19
+    T_POSIX_WORD                shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT              shift e prosecuzione allo stato 21
+    T_CHAR                      shift e prosecuzione allo stato 22
+    T_SPECIAL                   shift e prosecuzione allo stato 23
+    T_NUL                       shift e prosecuzione allo stato 24
+    T_BACKREF                   shift e prosecuzione allo stato 25
+    T_OCTAL                     shift e prosecuzione allo stato 26
+    T_HEX                       shift e prosecuzione allo stato 27
+    T_UNICODE                   shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN             shift e prosecuzione allo stato 29
+    T_POSIX_OUT                 shift e prosecuzione allo stato 30
+
+    $default  riduzione con la regola 4 (re)
+
+    basic_re          prosecuzione allo stato 81
+    lookaround        prosecuzione allo stato 82
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 100
+
+   24 plus: elementary_re T_PLUS T_PLUS . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 119
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 101
+
+   23 plus: elementary_re T_PLUS T_QUESTION . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 120
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 102
+
+   21 star: elementary_re T_STAR T_PLUS . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 121
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 103
+
+   20 star: elementary_re T_STAR T_QUESTION . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 122
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 104
+
+   27 question: elementary_re T_QUESTION T_PLUS . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 123
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 105
+
+   26 question: elementary_re T_QUESTION T_QUESTION . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 124
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 106
+
+   34 reprange: elementary_re T_LBRACE T_COMMA . T_INTEGER T_RBRACE
+   35         | elementary_re T_LBRACE T_COMMA . T_INTEGER T_RBRACE T_QUESTION basic_re
+   36         | elementary_re T_LBRACE T_COMMA . T_INTEGER T_RBRACE T_PLUS basic_re
+
+    T_INTEGER  shift e prosecuzione allo stato 125
+
+
+State 107
+
+   28 reprange: elementary_re T_LBRACE T_INTEGER . T_COMMA T_INTEGER T_RBRACE
+   29         | elementary_re T_LBRACE T_INTEGER . T_COMMA T_INTEGER T_RBRACE T_QUESTION basic_re
+   30         | elementary_re T_LBRACE T_INTEGER . T_COMMA T_INTEGER T_RBRACE T_PLUS basic_re
+   31         | elementary_re T_LBRACE T_INTEGER . T_RBRACE
+   32         | elementary_re T_LBRACE T_INTEGER . T_RBRACE T_QUESTION basic_re
+   33         | elementary_re T_LBRACE T_INTEGER . T_RBRACE T_PLUS basic_re
+   37         | elementary_re T_LBRACE T_INTEGER . T_COMMA T_RBRACE
+   38         | elementary_re T_LBRACE T_INTEGER . T_COMMA T_RBRACE T_QUESTION basic_re
+   39         | elementary_re T_LBRACE T_INTEGER . T_COMMA T_RBRACE T_PLUS basic_re
+
+    T_RBRACE  shift e prosecuzione allo stato 126
+    T_COMMA   shift e prosecuzione allo stato 127
+
+
+State 108
+
+   99 range: unicode_prop T_RANGE unicode_prop .
+
+    $default  riduzione con la regola 99 (range)
+
+
+State 109
+
+  100 range: unicode_prop T_RANGE char .
+
+    $default  riduzione con la regola 100 (range)
+
+
+State 110
+
+  102 range: unicode_prop_neg T_RANGE unicode_prop_neg .
+
+    $default  riduzione con la regola 102 (range)
+
+
+State 111
+
+  103 range: unicode_prop_neg T_RANGE char .
+
+    $default  riduzione con la regola 103 (range)
+
+
+State 112
+
+  101 range: char T_RANGE unicode_prop .
+
+    $default  riduzione con la regola 101 (range)
+
+
+State 113
+
+  104 range: char T_RANGE unicode_prop_neg .
+
+    $default  riduzione con la regola 104 (range)
+
+
+State 114
+
+   98 range: char T_RANGE char .
+
+    $default  riduzione con la regola 98 (range)
+
+
+State 115
+
+   15 lookaround: T_OPEN_POSITIVE_LOOKAHEAD re T_RPAREN .
+
+    $default  riduzione con la regola 15 (lookaround)
+
+
+State 116
+
+   16 lookaround: T_OPEN_NEGATIVE_LOOKAHEAD re T_RPAREN .
+
+    $default  riduzione con la regola 16 (lookaround)
+
+
+State 117
+
+   17 lookaround: T_OPEN_POSITIVE_LOOKBEHIND re T_RPAREN .
+
+    $default  riduzione con la regola 17 (lookaround)
+
+
+State 118
+
+   18 lookaround: T_OPEN_NEGATIVE_LOOKBEHIND re T_RPAREN .
+
+    $default  riduzione con la regola 18 (lookaround)
+
+
+State 119
+
+   24 plus: elementary_re T_PLUS T_PLUS basic_re .
+
+    $default  riduzione con la regola 24 (plus)
+
+
+State 120
+
+   23 plus: elementary_re T_PLUS T_QUESTION basic_re .
+
+    $default  riduzione con la regola 23 (plus)
+
+
+State 121
+
+   21 star: elementary_re T_STAR T_PLUS basic_re .
+
+    $default  riduzione con la regola 21 (star)
+
+
+State 122
+
+   20 star: elementary_re T_STAR T_QUESTION basic_re .
+
+    $default  riduzione con la regola 20 (star)
+
+
+State 123
+
+   27 question: elementary_re T_QUESTION T_PLUS basic_re .
+
+    $default  riduzione con la regola 27 (question)
+
+
+State 124
+
+   26 question: elementary_re T_QUESTION T_QUESTION basic_re .
+
+    $default  riduzione con la regola 26 (question)
+
+
+State 125
+
+   34 reprange: elementary_re T_LBRACE T_COMMA T_INTEGER . T_RBRACE
+   35         | elementary_re T_LBRACE T_COMMA T_INTEGER . T_RBRACE T_QUESTION basic_re
+   36         | elementary_re T_LBRACE T_COMMA T_INTEGER . T_RBRACE T_PLUS basic_re
+
+    T_RBRACE  shift e prosecuzione allo stato 128
+
+
+State 126
+
+   31 reprange: elementary_re T_LBRACE T_INTEGER T_RBRACE .
+   32         | elementary_re T_LBRACE T_INTEGER T_RBRACE . T_QUESTION basic_re
+   33         | elementary_re T_LBRACE T_INTEGER T_RBRACE . T_PLUS basic_re
+
+    T_PLUS      shift e prosecuzione allo stato 129
+    T_QUESTION  shift e prosecuzione allo stato 130
+
+    $default  riduzione con la regola 31 (reprange)
+
+
+State 127
+
+   28 reprange: elementary_re T_LBRACE T_INTEGER T_COMMA . T_INTEGER T_RBRACE
+   29         | elementary_re T_LBRACE T_INTEGER T_COMMA . T_INTEGER T_RBRACE T_QUESTION basic_re
+   30         | elementary_re T_LBRACE T_INTEGER T_COMMA . T_INTEGER T_RBRACE T_PLUS basic_re
+   37         | elementary_re T_LBRACE T_INTEGER T_COMMA . T_RBRACE
+   38         | elementary_re T_LBRACE T_INTEGER T_COMMA . T_RBRACE T_QUESTION basic_re
+   39         | elementary_re T_LBRACE T_INTEGER T_COMMA . T_RBRACE T_PLUS basic_re
+
+    T_RBRACE   shift e prosecuzione allo stato 131
+    T_INTEGER  shift e prosecuzione allo stato 132
+
+
+State 128
+
+   34 reprange: elementary_re T_LBRACE T_COMMA T_INTEGER T_RBRACE .
+   35         | elementary_re T_LBRACE T_COMMA T_INTEGER T_RBRACE . T_QUESTION basic_re
+   36         | elementary_re T_LBRACE T_COMMA T_INTEGER T_RBRACE . T_PLUS basic_re
+
+    T_PLUS      shift e prosecuzione allo stato 133
+    T_QUESTION  shift e prosecuzione allo stato 134
+
+    $default  riduzione con la regola 34 (reprange)
+
+
+State 129
+
+   33 reprange: elementary_re T_LBRACE T_INTEGER T_RBRACE T_PLUS . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 135
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 130
+
+   32 reprange: elementary_re T_LBRACE T_INTEGER T_RBRACE T_QUESTION . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 136
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 131
+
+   37 reprange: elementary_re T_LBRACE T_INTEGER T_COMMA T_RBRACE .
+   38         | elementary_re T_LBRACE T_INTEGER T_COMMA T_RBRACE . T_QUESTION basic_re
+   39         | elementary_re T_LBRACE T_INTEGER T_COMMA T_RBRACE . T_PLUS basic_re
+
+    T_PLUS      shift e prosecuzione allo stato 137
+    T_QUESTION  shift e prosecuzione allo stato 138
+
+    $default  riduzione con la regola 37 (reprange)
+
+
+State 132
+
+   28 reprange: elementary_re T_LBRACE T_INTEGER T_COMMA T_INTEGER . T_RBRACE
+   29         | elementary_re T_LBRACE T_INTEGER T_COMMA T_INTEGER . T_RBRACE T_QUESTION basic_re
+   30         | elementary_re T_LBRACE T_INTEGER T_COMMA T_INTEGER . T_RBRACE T_PLUS basic_re
+
+    T_RBRACE  shift e prosecuzione allo stato 139
+
+
+State 133
+
+   36 reprange: elementary_re T_LBRACE T_COMMA T_INTEGER T_RBRACE T_PLUS . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 140
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 134
+
+   35 reprange: elementary_re T_LBRACE T_COMMA T_INTEGER T_RBRACE T_QUESTION . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 141
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 135
+
+   33 reprange: elementary_re T_LBRACE T_INTEGER T_RBRACE T_PLUS basic_re .
+
+    $default  riduzione con la regola 33 (reprange)
+
+
+State 136
+
+   32 reprange: elementary_re T_LBRACE T_INTEGER T_RBRACE T_QUESTION basic_re .
+
+    $default  riduzione con la regola 32 (reprange)
+
+
+State 137
+
+   39 reprange: elementary_re T_LBRACE T_INTEGER T_COMMA T_RBRACE T_PLUS . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 142
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 138
+
+   38 reprange: elementary_re T_LBRACE T_INTEGER T_COMMA T_RBRACE T_QUESTION . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 143
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 139
+
+   28 reprange: elementary_re T_LBRACE T_INTEGER T_COMMA T_INTEGER T_RBRACE .
+   29         | elementary_re T_LBRACE T_INTEGER T_COMMA T_INTEGER T_RBRACE . T_QUESTION basic_re
+   30         | elementary_re T_LBRACE T_INTEGER T_COMMA T_INTEGER T_RBRACE . T_PLUS basic_re
+
+    T_PLUS      shift e prosecuzione allo stato 144
+    T_QUESTION  shift e prosecuzione allo stato 145
+
+    $default  riduzione con la regola 28 (reprange)
+
+
+State 140
+
+   36 reprange: elementary_re T_LBRACE T_COMMA T_INTEGER T_RBRACE T_PLUS basic_re .
+
+    $default  riduzione con la regola 36 (reprange)
+
+
+State 141
+
+   35 reprange: elementary_re T_LBRACE T_COMMA T_INTEGER T_RBRACE T_QUESTION basic_re .
+
+    $default  riduzione con la regola 35 (reprange)
+
+
+State 142
+
+   39 reprange: elementary_re T_LBRACE T_INTEGER T_COMMA T_RBRACE T_PLUS basic_re .
+
+    $default  riduzione con la regola 39 (reprange)
+
+
+State 143
+
+   38 reprange: elementary_re T_LBRACE T_INTEGER T_COMMA T_RBRACE T_QUESTION basic_re .
+
+    $default  riduzione con la regola 38 (reprange)
+
+
+State 144
+
+   30 reprange: elementary_re T_LBRACE T_INTEGER T_COMMA T_INTEGER T_RBRACE T_PLUS . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 146
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 145
+
+   29 reprange: elementary_re T_LBRACE T_INTEGER T_COMMA T_INTEGER T_RBRACE T_QUESTION . basic_re
+
+    T_LPAREN             shift e prosecuzione allo stato 1
+    T_BEGIN_NEG_SET      shift e prosecuzione allo stato 2
+    T_BEGIN_POS_SET      shift e prosecuzione allo stato 3
+    T_ANY                shift e prosecuzione allo stato 4
+    T_UNICODE_ANY        shift e prosecuzione allo stato 5
+    T_UNICODE_START      shift e prosecuzione allo stato 6
+    T_UNICODE_START_NEG  shift e prosecuzione allo stato 7
+    T_POSIX_ALNUM        shift e prosecuzione allo stato 8
+    T_POSIX_ALPHA        shift e prosecuzione allo stato 9
+    T_POSIX_ASCII        shift e prosecuzione allo stato 10
+    T_POSIX_BLANK        shift e prosecuzione allo stato 11
+    T_POSIX_CNTRL        shift e prosecuzione allo stato 12
+    T_POSIX_DIGIT        shift e prosecuzione allo stato 13
+    T_POSIX_GRAPH        shift e prosecuzione allo stato 14
+    T_POSIX_LOWER        shift e prosecuzione allo stato 15
+    T_POSIX_PRINT        shift e prosecuzione allo stato 16
+    T_POSIX_PUNCT        shift e prosecuzione allo stato 17
+    T_POSIX_SPACE        shift e prosecuzione allo stato 18
+    T_POSIX_UPPER        shift e prosecuzione allo stato 19
+    T_POSIX_WORD         shift e prosecuzione allo stato 20
+    T_POSIX_XDIGIT       shift e prosecuzione allo stato 21
+    T_CHAR               shift e prosecuzione allo stato 22
+    T_SPECIAL            shift e prosecuzione allo stato 23
+    T_NUL                shift e prosecuzione allo stato 24
+    T_BACKREF            shift e prosecuzione allo stato 25
+    T_OCTAL              shift e prosecuzione allo stato 26
+    T_HEX                shift e prosecuzione allo stato 27
+    T_UNICODE            shift e prosecuzione allo stato 28
+    T_POSIX_UNKNOWN      shift e prosecuzione allo stato 29
+    T_POSIX_OUT          shift e prosecuzione allo stato 30
+
+    basic_re          prosecuzione allo stato 147
+    star              prosecuzione allo stato 37
+    plus              prosecuzione allo stato 38
+    question          prosecuzione allo stato 39
+    reprange          prosecuzione allo stato 40
+    elementary_re     prosecuzione allo stato 41
+    group             prosecuzione allo stato 42
+    any               prosecuzione allo stato 43
+    unicode_any       prosecuzione allo stato 44
+    unicode_prop      prosecuzione allo stato 45
+    unicode_prop_neg  prosecuzione allo stato 46
+    backref           prosecuzione allo stato 47
+    char              prosecuzione allo stato 48
+    nul               prosecuzione allo stato 49
+    octal             prosecuzione allo stato 50
+    hex               prosecuzione allo stato 51
+    unicode           prosecuzione allo stato 52
+    set               prosecuzione allo stato 53
+    positive_set      prosecuzione allo stato 54
+    negative_set      prosecuzione allo stato 55
+
+
+State 146
+
+   30 reprange: elementary_re T_LBRACE T_INTEGER T_COMMA T_INTEGER T_RBRACE T_PLUS basic_re .
+
+    $default  riduzione con la regola 30 (reprange)
+
+
+State 147
+
+   29 reprange: elementary_re T_LBRACE T_INTEGER T_COMMA T_INTEGER T_RBRACE T_QUESTION basic_re .
+
+    $default  riduzione con la regola 29 (reprange)
