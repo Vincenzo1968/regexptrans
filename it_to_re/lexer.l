@@ -116,6 +116,7 @@ yycolumn += yyleng;
 "escape"				{return T_KW_ESCAPE;}
 "esiste"				{return T_KW_ESISTE;}
 "essere"				{return T_KW_ESSERE;}
+"fine"					{return T_KW_FINE;}
 "formattazione"			{return T_KW_FORMATTAZIONE;}
 "gruppo"				{return T_KW_GRUPPO;}
 "ideogramma"			{return T_KW_IDEOGRAMMA;}
@@ -202,6 +203,7 @@ yycolumn += yyleng;
 "viene"					{return T_KW_VIENE;}
 "virgolette"			{return T_KW_VIRGOLETTE;}
 "visibile"				{return T_KW_VISIBILE;}
+"vuota"					{return T_KW_VUOTA;}
 "zero"					{return T_KW_ZERO;}
 
 "all"					{return T_KW_ALL;}
@@ -212,6 +214,7 @@ yycolumn += yyleng;
 "che"					{return T_KW_CHE;}
 "con"					{return T_KW_CON;}
 "cui"					{return T_KW_CUI;}
+"della"					{return T_KW_DELLA;}
 "del"					{return T_KW_DEL;}
 "da"					{return T_KW_DA;}
 "di"					{return T_KW_DI;}

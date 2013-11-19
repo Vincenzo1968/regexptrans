@@ -61,6 +61,7 @@ void yyerror(YYLTYPE *locp, void *scanner, nodeType **pTree, char const *szInput
 %token T_KW_PARENTESI T_KW_VIRGOLETTE T_KW_APERTA T_KW_CHIUSA T_KW_APERTE T_KW_CHIUSE T_KW_CONNESSIONE T_KW_CITAZIONE 
 %token T_KW_INVISIBILI T_KW_CODE T_KW_POINT T_KW_UTILIZZATI T_KW_LATIN1 T_KW_INDICATORE T_KW_FORMATTAZIONE T_KW_RISERVATO T_KW_USO T_KW_PRIVATO
 %token T_KW_PER T_KW_SURROGATI T_KW_CODIFICA T_KW_UTF16 T_KW_CUI T_KW_E_VERBO T_KW_STATO T_KW_ASSEGNATO T_KW_NESSUN T_KW_BLOCCO T_KW_ALLA T_KW_APPARTENGA
+%token T_KW_VUOTA T_KW_DELLA T_KW_FINE
 
 %token T_LPAREN T_RPAREN T_BEGIN_NEG_SET T_BEGIN_POS_SET T_END_SET T_COMMA T_COLON T_DIV
 %token <cValue> T_CHAR
@@ -96,7 +97,27 @@ re:
 				| simple_re T_KW_MA T_KW_IL T_KW_MATCH T_KW_RESTITUITO T_KW_SARA simple_re
 				{
 					$$ = opr(AST_KAPPA, 2, $1, $7);
-				}				
+				}
+				| T_KW_LINEA T_KW_VUOTA
+				{
+					Valore val;
+					val.iVal = 1;					
+					$$ = con(AST_VOID_LINE, val);
+				}
+				| T_KW_ALL T_APICE T_KW_INIZIO T_KW_E T_KW_ALLA T_KW_FINE T_KW_DELLA T_KW_LINEA T_COLON simple_re
+				{
+					$$ = opr(AST_BEGIN_END, 1, $10);
+				}			
+				| T_KW_ALL T_APICE T_KW_INIZIO T_KW_DELLA T_KW_LINEA T_COLON simple_re
+				{
+					
+					$$ = opr(AST_BEGIN, 1, $7);
+				}							
+				| T_KW_ALLA T_KW_FINE T_KW_DELLA T_KW_LINEA T_COLON simple_re
+				{
+					
+					$$ = opr(AST_END, 1, $6);
+				}											
 				;
 								
 union:

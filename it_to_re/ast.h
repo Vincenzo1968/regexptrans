@@ -226,7 +226,9 @@ typedef enum _enumTipo1
     AST_UNICODE_ANY,
     AST_BACKREF,
     AST_BEGIN,
-    AST_END
+    AST_END,
+    AST_BEGIN_END,
+    AST_VOID_LINE
 } enumTipo1;
 
 typedef union _Valore
