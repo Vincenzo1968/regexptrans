@@ -30,63 +30,6 @@
 #include "parser.h"
 #include "lexer.h"
 
-/*
-http://www.regular-expressions.info/
- 
-http://www.regular-expressions.info/possessive.html
-http://docs.oracle.com/javase/tutorial/essential/regex/quant.html
-http://www.xyzws.com/javafaq/what-are-differences-among-greedy-reluctant-and-possessive-quantifiers-in-java-patterns/206
- 
-http://www.regular-expressions.info/posixbrackets.html
- 
-http://www.charlestonsw.com/perl-regular-expression-k-trick/
-
-http://docstore.mik.ua/orelly/unix/upt/ch26_04.htm
-
-http://www.hscripts.com/tutorials/regular-expression/metacharacter-list.php
-
-http://swtch.com/~rsc/regexp/ 
-http://swtch.com/~rsc/regexp/regexp1.html
-http://swtch.com/~rsc/regexp/regexp2.html
-http://swtch.com/~rsc/regexp/regexp3.html
-http://swtch.com/~rsc/regexp/regexp4.html
-
-http://www.cs.umd.edu/class/spring2013/cmsc330/p2/
- 
-http://perldoc.perl.org/perlrebackslash.html
- 
-http://www.zytrax.com/tech/web/regex.htm
- 
-http://msdn.microsoft.com/en-us/library/h5181w5w.aspx
-http://msdn.microsoft.com/en-us/library/4edbef7e.aspx
- 
-http://vertstudios.com/blog/back-references-quantifiers-and-anchors-in-regex/
-
-IMPORTANTE: Verificare le regexp:
-http://regexpal.com/
-http://regexpal.com/?flags=m&regex=[a-zA-Z0-9+]%2B[0-9]$&input=You+have+5+dollars.%0AI+want+2%0AMy+number+is+903+330+5057%0A903+330+5057+is+my+number.+
-http://www.regexplanet.com/
-http://regex.larsolavtorvik.com/
-http://www.rubular.com/
-
-[img]http://img585.imageshack.us/img585/7079/jra5.jpg[/img]
-*/
-
-
-/*
-Table 26.1: Regular Expression Anchor Character Examples:
-
-Pattern		Matches
-^A			An A at the beginning of a line
-A$			An A at the end of a line
-A			An A anywhere on a line
-$A			A $A anywhere on a line
-^\^			A ^ at the beginning of a line
-^^			Same as ^\^
-\$$			A $ at the end of a line
-$$			Same as \$$
-*/
-
 int initUnicodeScriptsTable(HashTable **pHashTable)
 {
 	int ret = 0;
@@ -1636,21 +1579,7 @@ char* prescan(char const *s, char const *szExeName, int *bBegin, int *bEnd)
 }
 
 /*
-valgrind --leak-check=full --show-reachable=yes --track-origins=yes --log-file=outValgrind.txt ./retoit_debug 'ciao\125 a tutti!{1,3}'
-* 
-valgrind --leak-check=full --show-reachable=yes --track-origins=yes --log-file=outValgrind.txt ./retoit_debug 'abc\p{InBasic_Latin}\p{InLatin-1_Supplement}\P{InBasic_Latin}\P{InLatin-1_Supplement}y\p{L}\p{Number}'
- 
 http://sourceforge.net/p/flex/bugs/140/
-
-http://sourceforge.net/p/flex/bugs/115/
- 
-http://sourceforge.net/p/flex/bugs/160/
- 
-echo 'abcdeabcdeabcxyz' | grep -Po 'a.*?abc.*a\Kbc.*'
-
-echo 'abcdeabcdeabcxyz' | grep -Po 'a(.*?)abc.*a\Kbc.*'
- 
-http://www.ubuntu-it.org/contribuiamo
 */
 
 int main ( int argc, char * argv[] )
@@ -1743,12 +1672,6 @@ int main ( int argc, char * argv[] )
 		fprintf(stdout, "all'inizio della linea /*(o stringa) */ :\n");
 	else if ( bEnd )
 		fprintf(stdout, "alla fine della linea /*(o stringa) */ :\n");
-		
-	/*		
-	initTranslateParams(&tParams);
-	
-	tParams.pHT_UnicodeBlocks = lexParam.pHT_UnicodeBlocks;
-	*/
 		
 	translate(pTree, &tParams);
 	
